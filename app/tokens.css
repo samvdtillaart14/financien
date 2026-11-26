@@ -137,3 +137,110 @@ details summary { cursor: pointer; }
 .app-update:empty { display: none; }
 .app-update { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 8px 12px; margin-bottom: 12px; }
 .app-settings select { font: inherit; font-size: 16px; color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 8px 10px; max-width: 100%; }
+
+/* ---------- Phone: app-style tab bar at the bottom, all four tabs always visible ---------- */
+@media (max-width: 700px) {
+  #dash-root { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+  #dash-root .fd-tabs {
+    position: fixed; top: auto; bottom: 0; left: 0; right: 0; z-index: 20;
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0;
+    overflow: visible; margin: 0;
+    padding: 4px max(4px, env(safe-area-inset-left)) calc(4px + env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-right));
+    background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--color-border-line); border-bottom: 0;
+    touch-action: manipulation;
+  }
+  #dash-root .fd-tab {
+    flex: initial; min-width: 0; margin: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    padding: 6px 2px; min-height: 52px;
+    border: 0; border-radius: 10px;
+    font-size: 11px; line-height: 1.1; letter-spacing: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  #dash-root .fd-tab .fd-ico { width: 22px; height: 22px; vertical-align: 0; }
+  #dash-root .fd-tab[aria-selected="true"] { color: var(--color-fg); background: var(--color-panel); }
+  #dash-root .fd-uitg-dag { top: 0; }
+}
+@media (max-width: 360px) { #dash-root .fd-tab { font-size: 10px; } }
+
+/* ---------- Side menu (upload + settings) ---------- */
+.app-drawer {
+  position: fixed; inset: 0 auto 0 0; margin: 0; padding: 0;
+  width: min(88vw, 400px); max-width: none; height: 100dvh; max-height: none;
+  border: 0; border-right: 1px solid var(--color-border-line); border-radius: 0 18px 18px 0;
+  background: var(--color-bg); color: var(--color-fg);
+  box-shadow: 8px 0 40px rgba(0, 0, 0, .18);
+}
+.app-drawer[open] { display: flex; flex-direction: column; }
+.app-drawer::backdrop { background: rgba(0, 0, 0, .35); }
+@media (prefers-reduced-motion: no-preference) {
+  .app-drawer[open] { animation: app-in .2s var(--cds-ease-out); }
+  .app-drawer.app-drawer-weg { animation: app-uit .18s ease-in forwards; }
+  @keyframes app-in { from { transform: translateX(-100%); } to { transform: none; } }
+  @keyframes app-uit { to { transform: translateX(-100%); } }
+}
+.app-drawer-kop { flex: none; display: flex; justify-content: space-between; align-items: center; padding: calc(12px + env(safe-area-inset-top)) 16px 12px max(16px, env(safe-area-inset-left)); border-bottom: 1px solid var(--color-border-line); font-size: var(--cds-font-size-heading); }
+.app-drawer-sluit { font: inherit; font-size: 18px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--color-border-line); background: var(--color-panel); color: var(--color-fg); cursor: pointer; }
+.app-drawer-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 8px 16px calc(24px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); overscroll-behavior: contain; touch-action: pan-y; }
+.app-drawer-body .app-h:first-child { margin-top: 8px; }
+.app-drawer .fd-upload { flex: none; width: 100%; }
+.app-drawer .fd-drop { flex-direction: row; align-items: center; justify-content: space-between; }
+.app-drawer .app-settings { margin-top: 0; }
+#dash-root .app-menu-knop { margin-left: auto; }
+@media (max-width: 700px) {
+  #dash-root .fd-tabs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  #dash-root .fd-tab { font-size: 10px; }
+  #dash-root .app-menu-knop { margin-left: 0; }
+}
+
+/* ---------- PIN lock ---------- */
+html.app-locked #dash-root, html.app-cover #dash-root { visibility: hidden; }
+.app-lock {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0; overflow-y: auto; overscroll-behavior: contain;
+  background: var(--color-bg); color: var(--color-fg);
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+}
+.app-lock[open] { display: flex; }
+.app-lock::backdrop { background: var(--color-bg); }
+.app-lock-in {
+  margin: auto; width: min(100%, 360px); outline: none;
+  padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.app-lock-ico { width: 36px; height: 36px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; color: var(--color-fg-muted); }
+.app-lock h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 12px 0 2px; }
+.app-lock-sub { margin: 0; min-height: 1.4em; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.app-lock-invoer { display: flex; flex-direction: column; align-items: center; }
+.app-lock-dots { display: flex; justify-content: center; gap: 14px; height: 16px; margin: 18px 0 6px; }
+.app-lock-dots i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--color-fg); }
+.app-lock-dots i.vol { background: var(--color-fg); }
+.app-lock-msg { margin: 0; min-height: 2.8em; max-width: 280px; font-size: var(--cds-font-size-caption); color: var(--color-bad); }
+.app-lock-pad { display: grid; grid-template-columns: repeat(3, 72px); gap: 14px 24px; }
+.app-lock-pad button {
+  width: 72px; height: 72px; border-radius: 50%; border: 0; padding: 0;
+  background: var(--color-panel); color: var(--color-fg); font: inherit; font-size: 28px; font-weight: 400;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.app-lock-pad button:active { background: var(--color-border-line); }
+.app-lock-pad button:disabled { opacity: .35; cursor: default; }
+.app-lock-pad .app-lock-tekst { background: none; font-size: 14px; color: var(--color-fg-muted); }
+.app-lock-pad .app-lock-tekst:active { background: var(--color-panel); }
+.app-lock-pad .app-lock-tekst svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; vertical-align: middle; }
+.app-lock-pad button:focus-visible, .app-lock-acties button:focus-visible { outline: 2px solid var(--c0); outline-offset: 2px; }
+.app-lock-acties { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 18px; min-height: 40px; }
+.app-lock-wis { max-width: 300px; }
+.app-lock-wis p { margin: 12px 0 16px; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); }
+.app-lock-wis .app-btns { justify-content: center; }
+.app-lock-gevaar { color: #fff !important; background: var(--color-bad) !important; border-color: var(--color-bad) !important; }
+@media (prefers-reduced-motion: no-preference) {
+  .app-lock-schud { animation: app-schud .36s ease-in-out; }
+  @keyframes app-schud { 20%, 60% { transform: translateX(-9px); } 40%, 80% { transform: translateX(9px); } }
+}
+@media (max-height: 640px) {
+  .app-lock-pad { grid-template-columns: repeat(3, 62px); gap: 10px 22px; }
+  .app-lock-pad button { width: 62px; height: 62px; font-size: 24px; }
+  .app-lock-ico { display: none; }
+}
