@@ -126,6 +126,14 @@
   }));
   document.querySelectorAll("#app-sync-nu").forEach((b) => b.addEventListener("click", sync));
   document.querySelectorAll("#app-koers-nu").forEach((b) => b.addEventListener("click", () => KOERS.fetch(true)));
+  document.querySelectorAll("#app-bijwerken").forEach((b) => b.addEventListener("click", async () => {
+    status("#app-versie-status", "Bijwerken…");
+    try {
+      if ("serviceWorker" in navigator) for (const r of await navigator.serviceWorker.getRegistrations()) await r.unregister();
+      if (window.caches) for (const k of await caches.keys()) if (k.startsWith("financien-")) await caches.delete(k);
+    } catch (e) {}
+    location.reload();
+  }));
 
   // ---------- theme ----------
   function zetThema(t) {
