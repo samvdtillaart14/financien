@@ -137,3 +137,30 @@ details summary { cursor: pointer; }
 .app-update:empty { display: none; }
 .app-update { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 8px 12px; margin-bottom: 12px; }
 .app-settings select { font: inherit; font-size: 16px; color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 8px 10px; max-width: 100%; }
+
+/* ---------- Phone: app-style tab bar at the bottom, all four tabs always visible ---------- */
+@media (max-width: 700px) {
+  #dash-root { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+  #dash-root .fd-tabs {
+    position: fixed; top: auto; bottom: 0; left: 0; right: 0; z-index: 20;
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0;
+    overflow: visible; margin: 0;
+    padding: 4px max(4px, env(safe-area-inset-left)) calc(4px + env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-right));
+    background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--color-border-line); border-bottom: 0;
+    touch-action: manipulation;
+  }
+  #dash-root .fd-tab {
+    flex: initial; min-width: 0; margin: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    padding: 6px 2px; min-height: 52px;
+    border: 0; border-radius: 10px;
+    font-size: 11px; line-height: 1.1; letter-spacing: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  #dash-root .fd-tab .fd-ico { width: 22px; height: 22px; vertical-align: 0; }
+  #dash-root .fd-tab[aria-selected="true"] { color: var(--color-fg); background: var(--color-panel); }
+  #dash-root .fd-uitg-dag { top: 0; }
+}
+@media (max-width: 360px) { #dash-root .fd-tab { font-size: 10px; } }

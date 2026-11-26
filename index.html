@@ -240,7 +240,8 @@
 .fd-totals .fd-sub, #verwacht-kop + p.fd-sub { display: block; }
 @media (max-width: 560px) {
   .fd-card .fd-per { display: none; }
-  .fd-card .fd-label { white-space: nowrap; }
+  .fd-card .fd-label { display: block; white-space: normal; }
+  .fd-card .fd-label .fd-ico { margin-right: 6px; }
   .fd-card { padding: var(--cds-pad-md); }
   /* Tables become compact rows: name and amount on top, details below */
   :is(table:has(> tbody[data-draw="vaste-tabel"]), table:has(> tbody[data-draw="verwacht-tabel"]), table:has(> tbody[data-draw="reizen-tabel"]), table:has(> tbody[data-draw="tx-tabel"]), table:has(> tbody[data-draw="vm-pos-tabel"])) {
@@ -646,7 +647,7 @@
     </form>
     <p class="app-h">Versie</p>
     <div class="app-btns">
-      <span class="app-status">Versie 26-11-2026 23:01</span>
+      <span class="app-status">Versie 26-11-2026 23:07</span>
       <button type="button" class="fd-btn fd-btn-small" id="app-bijwerken">App bijwerken</button>
     </div>
     <p class="app-status" id="app-versie-status" aria-live="polite"></p>

@@ -135,6 +135,9 @@
     location.reload();
   }));
 
+  // ---------- tabs: start a newly opened tab at the top ----------
+  document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "instant" })));
+
   // ---------- theme ----------
   function zetThema(t) {
     document.documentElement.dataset.theme = t;
