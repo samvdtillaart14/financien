@@ -256,7 +256,7 @@
     } catch (e) {
       console.error("IndexedDB niet beschikbaar", e);
     }
-    ready = true; ver++;
+    ready = true; store.ready = true; ver++;
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", scheduleRender); else scheduleRender();
     document.dispatchEvent(new Event("app-ready"));
   })();
