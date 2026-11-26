@@ -39,6 +39,7 @@
   // ---------- GitHub Gist ----------
   async function gh(path, opts = {}) {
     const r = await fetch("https://api.github.com" + path, {
+      cache: "no-store",
       ...opts,
       headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + ls.get("gh_token"), "X-GitHub-Api-Version": "2022-11-28", ...(opts.body ? { "Content-Type": "application/json" } : {}) }
     });
@@ -61,7 +62,7 @@
   async function leesGist(g) {
     const f = g.files[GIST_FILE];
     if (!f) return null;
-    const txt = f.truncated ? await (await fetch(f.raw_url)).text() : f.content;
+    const txt = f.truncated ? await (await fetch(f.raw_url, { cache: "no-store" })).text() : f.content;
     return JSON.parse(txt);
   }
 
@@ -150,10 +151,11 @@
 
   // ---------- lifecycle ----------
   const start = () => { vulForm(); sync(); };
-  if (window.STORE) document.addEventListener("app-ready", start, { once: true });
+  if (window.STORE && STORE.ready) start(); else document.addEventListener("app-ready", start, { once: true });
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") sync(); });
   window.addEventListener("online", sync);
-  setInterval(() => { if (document.visibilityState === "visible") sync(); }, 5 * 60e3);
+  window.addEventListener("focus", () => sync());
+  setInterval(() => { if (document.visibilityState === "visible") sync(); }, 60e3);
 
   if ("serviceWorker" in navigator) {
     const hadController = !!navigator.serviceWorker.controller;
