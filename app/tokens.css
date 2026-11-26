@@ -164,3 +164,33 @@ details summary { cursor: pointer; }
   #dash-root .fd-uitg-dag { top: 0; }
 }
 @media (max-width: 360px) { #dash-root .fd-tab { font-size: 10px; } }
+
+/* ---------- Side menu (upload + settings) ---------- */
+.app-drawer {
+  position: fixed; inset: 0 auto 0 0; margin: 0; padding: 0;
+  width: min(88vw, 400px); max-width: none; height: 100dvh; max-height: none;
+  border: 0; border-right: 1px solid var(--color-border-line); border-radius: 0 18px 18px 0;
+  background: var(--color-bg); color: var(--color-fg);
+  box-shadow: 8px 0 40px rgba(0, 0, 0, .18);
+}
+.app-drawer[open] { display: flex; flex-direction: column; }
+.app-drawer::backdrop { background: rgba(0, 0, 0, .35); }
+@media (prefers-reduced-motion: no-preference) {
+  .app-drawer[open] { animation: app-in .2s var(--cds-ease-out); }
+  .app-drawer.app-drawer-weg { animation: app-uit .18s ease-in forwards; }
+  @keyframes app-in { from { transform: translateX(-100%); } to { transform: none; } }
+  @keyframes app-uit { to { transform: translateX(-100%); } }
+}
+.app-drawer-kop { flex: none; display: flex; justify-content: space-between; align-items: center; padding: calc(12px + env(safe-area-inset-top)) 16px 12px max(16px, env(safe-area-inset-left)); border-bottom: 1px solid var(--color-border-line); font-size: var(--cds-font-size-heading); }
+.app-drawer-sluit { font: inherit; font-size: 18px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--color-border-line); background: var(--color-panel); color: var(--color-fg); cursor: pointer; }
+.app-drawer-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 8px 16px calc(24px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); overscroll-behavior: contain; touch-action: pan-y; }
+.app-drawer-body .app-h:first-child { margin-top: 8px; }
+.app-drawer .fd-upload { flex: none; width: 100%; }
+.app-drawer .fd-drop { flex-direction: row; align-items: center; justify-content: space-between; }
+.app-drawer .app-settings { margin-top: 0; }
+#dash-root .app-menu-knop { margin-left: auto; }
+@media (max-width: 700px) {
+  #dash-root .fd-tabs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  #dash-root .fd-tab { font-size: 10px; }
+  #dash-root .app-menu-knop { margin-left: 0; }
+}

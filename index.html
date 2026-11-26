@@ -238,10 +238,11 @@
 .fd-table .fd-chip { white-space: nowrap; }
 /* ---------- Phone layout ---------- */
 .fd-totals .fd-sub, #verwacht-kop + p.fd-sub { display: block; }
+.fd-card .fd-label { display: block; white-space: normal; }
+.fd-card .fd-label .fd-ico { margin-right: 6px; }
 @media (max-width: 560px) {
   .fd-card .fd-per { display: none; }
-  .fd-card .fd-label { display: block; white-space: normal; }
-  .fd-card .fd-label .fd-ico { margin-right: 6px; }
+
   .fd-card { padding: var(--cds-pad-md); }
   /* Tables become compact rows: name and amount on top, details below */
   :is(table:has(> tbody[data-draw="vaste-tabel"]), table:has(> tbody[data-draw="verwacht-tabel"]), table:has(> tbody[data-draw="reizen-tabel"]), table:has(> tbody[data-draw="tx-tabel"]), table:has(> tbody[data-draw="vm-pos-tabel"])) {
@@ -375,7 +376,7 @@
 
   <section class="fd-panel" id="leeg" data-show="empty" hidden>
     <h2 style="margin:0;font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium)">Nog geen afschriften</h2>
-    <p class="fd-sub">Voeg hierboven een Rabobank-CSV toe. Daarna zie je hier je inkomsten en uitgaven per maand, en je vaste lasten en abonnementen.</p>
+    <p class="fd-sub">Voeg via Menu → Afschrift toevoegen een Rabobank-CSV toe. Daarna zie je hier je inkomsten en uitgaven per maand, en je vaste lasten en abonnementen.</p>
   </section>
 
   <nav class="fd-tabs" role="tablist" aria-label="Weergave" data-show="data">
@@ -463,7 +464,7 @@
     <h3 class="fd-h3">Trading 212: rente, dividend en resultaat</h3>
     <p class="fd-sub" data-draw="t212-tekst"></p>
     <div class="fd-tablewrap"><table class="fd-table" data-source="t212_activiteit" data-row-key="maand"><thead><tr><th data-field="maand">Maand</th><th data-field="rente">Rente</th><th data-field="dividend">Dividend</th><th data-field="resultaat">Resultaat verkopen</th><th data-field="kosten">Kosten</th></tr></thead><tbody data-draw="t212-tabel"></tbody></table></div>
-    <p class="fd-sub">Sleep je Trading 212-export (Geschiedenis → Exporteren, CSV) in het uploadvak rechtsboven om dit bij te werken. Dubbele regels worden overgeslagen.</p>
+    <p class="fd-sub">Sleep je Trading 212-export (Geschiedenis → Exporteren, CSV) via Menu → Afschrift toevoegen om dit bij te werken. Dubbele regels worden overgeslagen.</p>
 
     <h3 class="fd-h3">Geld van en naar Trading 212</h3>
     <p class="fd-sub" data-draw="vm-stroom-tekst"></p>
@@ -656,8 +657,15 @@
   </details>
 </div>
 
-  <details class="app-settings fd-panel" id="app-instellingen">
-    <summary><b>App-instellingen, synchronisatie en back-up</b></summary>
+  <dialog class="app-drawer" id="app-menu" aria-label="Menu">
+   <div class="app-drawer-kop">
+    <b>Menu</b>
+    <button type="button" class="app-drawer-sluit" id="app-menu-sluit" aria-label="Menu sluiten">✕</button>
+   </div>
+   <div class="app-drawer-body">
+    <p class="app-h">Afschrift toevoegen</p>
+    <div id="app-menu-upload"></div>
+    <div class="app-settings" id="app-instellingen">
     <p class="app-h">Weergave</p>
     <div class="app-row">
       <label for="app-thema">Licht of donker (geldt voor dit toestel)</label>
@@ -682,7 +690,7 @@
     </form>
     <p class="app-h">Versie</p>
     <div class="app-btns">
-      <span class="app-status">Versie 26-11-2026 23:10</span>
+      <span class="app-status">Versie 26-11-2026 23:12</span>
       <button type="button" class="fd-btn fd-btn-small" id="app-bijwerken">App bijwerken</button>
     </div>
     <p class="app-status" id="app-versie-status" aria-live="polite"></p>
@@ -693,7 +701,9 @@
       <input type="file" id="app-import" accept=".json,application/json" class="fd-file">
     </div>
     <p class="app-status" id="app-backup-status" aria-live="polite"></p>
-  </details>
+    </div>
+   </div>
+  </dialog>
 </div>
 <script src="vendor/d3.v7.min.js"></script>
 <script src="app/shim.js"></script>

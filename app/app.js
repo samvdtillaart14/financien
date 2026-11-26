@@ -135,6 +135,25 @@
     location.reload();
   }));
 
+  // ---------- side menu: upload + settings ----------
+  const menu = $("#app-menu");
+  if (menu) {
+    const slot = $("#app-menu-upload"), upload = $("#afschrift-toevoegen");
+    if (slot && upload) slot.append(upload);
+    const knop = document.createElement("button");
+    knop.type = "button"; knop.className = "fd-tab app-menu-knop"; knop.id = "app-menu-open"; knop.setAttribute("aria-haspopup", "dialog");
+    knop.innerHTML = '<svg class="fd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Menu</span>';
+    document.querySelectorAll(".fd-tabs").forEach((bar) => bar.append(knop));
+    const open = () => { try { menu.showModal(); } catch (e) { menu.setAttribute("open", ""); } };
+    const dicht = () => { menu.classList.add("app-drawer-weg"); setTimeout(() => { menu.classList.remove("app-drawer-weg"); if (menu.open) menu.close(); }, 180); };
+    knop.addEventListener("click", open);
+    $("#app-menu-sluit") && $("#app-menu-sluit").addEventListener("click", dicht);
+    menu.addEventListener("click", (ev) => { if (ev.target === menu) dicht(); });
+    menu.addEventListener("cancel", (ev) => { ev.preventDefault(); dicht(); });
+    // after picking a file, close the menu so the result is visible
+    document.querySelectorAll("#csv-input").forEach((i) => i.addEventListener("change", () => setTimeout(dicht, 300)));
+  }
+
   // ---------- tabs: start a newly opened tab at the top ----------
   document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "instant" })));
 
