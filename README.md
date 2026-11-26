@@ -31,5 +31,10 @@ GitHub → *Settings → Developer settings → Personal access tokens → Fine-
 - Per onderdeel (maand, stand, instellingen, notitie) wint de nieuwste wijziging.
 - Verkeerd wachtwoord? Dan wordt er niets overschreven.
 
+## Pincode
+*Menu → Pincode instellen* (4 tot 8 cijfers, per toestel). De app vraagt de pincode bij openen en na wegschakelen (instelbaar: meteen, 1, 5 of 15 minuten). Na 5 foute pogingen moet je wachten, steeds langer. De pincode zelf wordt niet opgeslagen, alleen een hash, en gaat niet mee met de sync.
+
+Pincode vergeten? Dan kun je alleen alle gegevens op dat toestel wissen en ze terugzetten via sync (GitHub-token + sync-wachtwoord) of een back-up.
+
 ## Bijwerken
 Nieuwe versie van de bestanden uploaden naar dezelfde repository. Je gegevens blijven staan; de app laadt de nieuwe versie bij de volgende keer openen.

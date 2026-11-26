@@ -66,7 +66,12 @@
       return touched.length;
     },
     write: writeDoc,
-    get: (p) => docs.get(p)
+    get: (p) => docs.get(p),
+    async wipe() { // forgotten PIN: remove everything stored on this device
+      try { if (idb) idb.close(); } catch (e) {}
+      idb = null; docs.clear();
+      await new Promise((res) => { const r = indexedDB.deleteDatabase(DB_NAME); r.onsuccess = r.onerror = r.onblocked = () => res(); });
+    }
   };
 
   // ---------- sources ----------

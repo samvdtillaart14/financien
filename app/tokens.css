@@ -194,3 +194,53 @@ details summary { cursor: pointer; }
   #dash-root .fd-tab { font-size: 10px; }
   #dash-root .app-menu-knop { margin-left: 0; }
 }
+
+/* ---------- PIN lock ---------- */
+html.app-locked #dash-root, html.app-cover #dash-root { visibility: hidden; }
+.app-lock {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0; overflow-y: auto; overscroll-behavior: contain;
+  background: var(--color-bg); color: var(--color-fg);
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+}
+.app-lock[open] { display: flex; }
+.app-lock::backdrop { background: var(--color-bg); }
+.app-lock-in {
+  margin: auto; width: min(100%, 360px); outline: none;
+  padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.app-lock-ico { width: 36px; height: 36px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; color: var(--color-fg-muted); }
+.app-lock h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 12px 0 2px; }
+.app-lock-sub { margin: 0; min-height: 1.4em; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.app-lock-invoer { display: flex; flex-direction: column; align-items: center; }
+.app-lock-dots { display: flex; justify-content: center; gap: 14px; height: 16px; margin: 18px 0 6px; }
+.app-lock-dots i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--color-fg); }
+.app-lock-dots i.vol { background: var(--color-fg); }
+.app-lock-msg { margin: 0; min-height: 2.8em; max-width: 280px; font-size: var(--cds-font-size-caption); color: var(--color-bad); }
+.app-lock-pad { display: grid; grid-template-columns: repeat(3, 72px); gap: 14px 24px; }
+.app-lock-pad button {
+  width: 72px; height: 72px; border-radius: 50%; border: 0; padding: 0;
+  background: var(--color-panel); color: var(--color-fg); font: inherit; font-size: 28px; font-weight: 400;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.app-lock-pad button:active { background: var(--color-border-line); }
+.app-lock-pad button:disabled { opacity: .35; cursor: default; }
+.app-lock-pad .app-lock-tekst { background: none; font-size: 14px; color: var(--color-fg-muted); }
+.app-lock-pad .app-lock-tekst:active { background: var(--color-panel); }
+.app-lock-pad .app-lock-tekst svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; vertical-align: middle; }
+.app-lock-pad button:focus-visible, .app-lock-acties button:focus-visible { outline: 2px solid var(--c0); outline-offset: 2px; }
+.app-lock-acties { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 18px; min-height: 40px; }
+.app-lock-wis { max-width: 300px; }
+.app-lock-wis p { margin: 12px 0 16px; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); }
+.app-lock-wis .app-btns { justify-content: center; }
+.app-lock-gevaar { color: #fff !important; background: var(--color-bad) !important; border-color: var(--color-bad) !important; }
+@media (prefers-reduced-motion: no-preference) {
+  .app-lock-schud { animation: app-schud .36s ease-in-out; }
+  @keyframes app-schud { 20%, 60% { transform: translateX(-9px); } 40%, 80% { transform: translateX(9px); } }
+}
+@media (max-height: 640px) {
+  .app-lock-pad { grid-template-columns: repeat(3, 62px); gap: 10px 22px; }
+  .app-lock-pad button { width: 62px; height: 62px; font-size: 24px; }
+  .app-lock-ico { display: none; }
+}

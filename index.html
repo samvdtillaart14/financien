@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#faf9f5">
-<script>try { document.documentElement.dataset.theme = localStorage.getItem("thema") || "light"; } catch (e) { document.documentElement.dataset.theme = "light"; }</script>
+<script>try { document.documentElement.dataset.theme = localStorage.getItem("thema") || "light"; if (localStorage.getItem("pin")) document.documentElement.classList.add("app-locked"); } catch (e) { document.documentElement.dataset.theme = "light"; }</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Financiën">
@@ -350,6 +350,27 @@
 </style>
 </head>
 <body>
+<dialog class="app-lock" id="app-lock" aria-labelledby="app-lock-titel">
+ <div class="app-lock-in" id="app-lock-in" tabindex="-1">
+  <svg class="app-lock-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+  <h2 id="app-lock-titel">Voer je pincode in</h2>
+  <p class="app-lock-sub" id="app-lock-sub"></p>
+  <div class="app-lock-invoer" id="app-lock-invoer">
+   <div class="app-lock-dots" id="app-lock-dots" role="img" aria-label="0 cijfers ingevoerd"></div>
+   <p class="app-lock-msg" id="app-lock-msg" aria-live="assertive"></p>
+   <div class="app-lock-pad" id="app-lock-pad"><button type="button" data-cijfer="1">1</button><button type="button" data-cijfer="2">2</button><button type="button" data-cijfer="3">3</button><button type="button" data-cijfer="4">4</button><button type="button" data-cijfer="5">5</button><button type="button" data-cijfer="6">6</button><button type="button" data-cijfer="7">7</button><button type="button" data-cijfer="8">8</button><button type="button" data-cijfer="9">9</button><button type="button" class="app-lock-tekst" id="app-lock-links">Vergeten?</button><button type="button" data-cijfer="0">0</button><button type="button" class="app-lock-tekst" id="app-lock-terug" aria-label="Laatste cijfer wissen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5h11v14H9l-6-7z"/><path d="M12.5 9.5l5 5m0-5l-5 5"/></svg></button></div>
+   <div class="app-lock-acties"><button type="button" class="fd-btn fd-btn-primary" id="app-lock-volgende" hidden>Volgende</button></div>
+  </div>
+  <div class="app-lock-wis" id="app-lock-wis" hidden>
+   <p>Je kunt een vergeten pincode alleen omzeilen door <b>alle gegevens op dit toestel te wissen</b>, ook je sync-instellingen. Daarna zet je ze terug met je GitHub-token en sync-wachtwoord, of met een back-up.</p>
+   <div class="app-btns">
+    <button type="button" class="fd-btn" id="app-lock-wis-terug">Terug</button>
+    <button type="button" class="fd-btn app-lock-gevaar" id="app-lock-wis-ja">Alles op dit toestel wissen</button>
+   </div>
+  </div>
+ </div>
+</dialog>
+<script src="app/pin.js"></script>
 <div id="dash-root" lang="nl">
 <p class="app-update" id="app-update" aria-live="polite"></p>
 <div class="fd">
@@ -671,6 +692,18 @@
       <label for="app-thema">Licht of donker (geldt voor dit toestel)</label>
       <select id="app-thema"><option value="light">Licht</option><option value="auto">Automatisch (volgt je toestel)</option><option value="dark">Donker</option></select>
     </div>
+    <p class="app-h">Pincode</p>
+    <p class="app-status" id="app-pin-status" aria-live="polite"></p>
+    <div class="app-btns">
+      <button type="button" class="fd-btn" id="app-pin-zet">Pincode instellen</button>
+      <button type="button" class="fd-btn" id="app-pin-nu" hidden>Nu vergrendelen</button>
+      <button type="button" class="fd-btn fd-btn-danger" id="app-pin-uit" hidden>Pincode uitzetten</button>
+    </div>
+    <div class="app-row" id="app-pin-na-rij" hidden style="margin-top:8px">
+      <label for="app-pin-na">Opnieuw vragen nadat je de app hebt weggeschakeld</label>
+      <select id="app-pin-na"><option value="0">Meteen</option><option value="1">Na 1 minuut</option><option value="5">Na 5 minuten</option><option value="15">Na 15 minuten</option></select>
+      <p class="app-status">Laat je de app open staan zonder hem te gebruiken, dan vergrendelt hij na 5 minuten (of na de tijd hierboven als die langer is).</p>
+    </div>
     <form id="app-form" autocomplete="off">
       <p class="app-h">Live koersen</p>
       <label for="app-av">Alpha Vantage API-sleutel (gratis via alphavantage.co)</label>
@@ -690,7 +723,7 @@
     </form>
     <p class="app-h">Versie</p>
     <div class="app-btns">
-      <span class="app-status">Versie 26-11-2026 23:12</span>
+      <span class="app-status">Versie 26-11-2026 23:45</span>
       <button type="button" class="fd-btn fd-btn-small" id="app-bijwerken">App bijwerken</button>
     </div>
     <p class="app-status" id="app-versie-status" aria-live="polite"></p>
