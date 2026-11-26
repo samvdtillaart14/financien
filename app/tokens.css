@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --color-fg: #1f1e1b;
   --color-fg-muted: #6b6862;
   --color-bg: #faf9f5;
@@ -31,8 +31,29 @@
   --cds-dur-slow: 400ms;
   --cds-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+/* Theme: data-theme on <html> is "light" (default), "dark" or "auto" (follows the device) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+    --color-fg: #ecebe6;
+    --color-fg-muted: #a3a09a;
+    --color-bg: #1d1c1a;
+    --color-panel: #272623;
+    --color-border-line: #3b3935;
+    --color-ok: #5cbf86;
+    --color-warn: #e39a52;
+    --color-bad: #ee6b62;
+    --c0: #6c9be0; --c1: #f0975a; --c2: #5cc0b3; --c3: #b58ae0; --c4: #e0c25a; --c5: #e0809f; --c6: #8cbf5c; --c7: #a0a0a0;
+    --cds-chart-muted: #5a5750;
+    --cds-chart-grid: #33312d;
+    --cds-chart-axis: #55524c;
+    --cds-chart-reference: #8f8b82;
+    --cds-text-secondary: #a3a09a;
+    --cds-surface-popover: #2e2d29;
+    --cds-border: #45423d;
+}
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root[data-theme="auto"] {
+    color-scheme: dark;
     --color-fg: #ecebe6;
     --color-fg-muted: #a3a09a;
     --color-bg: #1d1c1a;
@@ -55,6 +76,11 @@
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 html, body { overflow-x: clip; overscroll-behavior-x: none; max-width: 100%; }
+/* Phone: the page only scrolls up and down (no pinch-zoom, no sideways drift);
+   strips that scroll sideways on purpose keep their own horizontal swipe */
+html, body { touch-action: pan-y; }
+.fd-tabs, .fd-seg, .fd-tablewrap, .fd-stack-legend { touch-action: pan-x pan-y; }
+input, select, textarea, .dash-select { font-size: max(16px, 1em); }
 body {
   margin: 0;
   background: var(--color-bg);
@@ -110,3 +136,4 @@ details summary { cursor: pointer; }
 .app-h { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: var(--cds-gap-lg) 0 var(--cds-gap-xs); }
 .app-update:empty { display: none; }
 .app-update { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 8px 12px; margin-bottom: 12px; }
+.app-settings select { font: inherit; font-size: 16px; color: var(--color-fg); background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 8px 10px; max-width: 100%; }

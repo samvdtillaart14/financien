@@ -2,10 +2,10 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1d1c1a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#faf9f5">
+<script>try { document.documentElement.dataset.theme = localStorage.getItem("thema") || "light"; } catch (e) { document.documentElement.dataset.theme = "light"; }</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Financiën">
@@ -622,6 +622,11 @@
 
   <details class="app-settings fd-panel" id="app-instellingen">
     <summary><b>App-instellingen, synchronisatie en back-up</b></summary>
+    <p class="app-h">Weergave</p>
+    <div class="app-row">
+      <label for="app-thema">Licht of donker (geldt voor dit toestel)</label>
+      <select id="app-thema"><option value="light">Licht</option><option value="auto">Automatisch (volgt je toestel)</option><option value="dark">Donker</option></select>
+    </div>
     <form id="app-form" autocomplete="off">
       <p class="app-h">Live koersen</p>
       <label for="app-av">Alpha Vantage API-sleutel (gratis via alphavantage.co)</label>

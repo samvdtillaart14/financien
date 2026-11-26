@@ -127,6 +127,19 @@
   document.querySelectorAll("#app-sync-nu").forEach((b) => b.addEventListener("click", sync));
   document.querySelectorAll("#app-koers-nu").forEach((b) => b.addEventListener("click", () => KOERS.fetch(true)));
 
+  // ---------- theme ----------
+  function zetThema(t) {
+    document.documentElement.dataset.theme = t;
+    const donker = t === "dark" || (t === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute("content", donker ? "#1d1c1a" : "#faf9f5"));
+  }
+  document.querySelectorAll("#app-thema").forEach((sel) => {
+    sel.value = ls.get("thema") || "light";
+    sel.addEventListener("change", () => { ls.set("thema", sel.value); zetThema(sel.value); });
+  });
+  zetThema(ls.get("thema") || "light");
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => zetThema(ls.get("thema") || "light"));
+
   // ---------- backup ----------
   document.querySelectorAll("#app-export").forEach((b) => b.addEventListener("click", () => {
     const blob = new Blob([JSON.stringify({ app: "huishoudfinancien", v: 1, at: Date.now(), docs: Object.fromEntries(STORE.all()) })], { type: "application/json" });
