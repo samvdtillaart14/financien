@@ -163,17 +163,7 @@
   .fd-upload { flex-basis: 100%; }
   .fd-drop { flex-direction: row; align-items: center; justify-content: space-between; }
   /* Fewer columns on a phone: keep name, amount and action */
-  table:has(tbody[data-draw="vaste-tabel"]) :is(th, td):nth-child(3),
-  table:has(tbody[data-draw="vaste-tabel"]) :is(th, td):nth-child(4),
-  table:has(tbody[data-draw="vaste-tabel"]) :is(th, td):nth-child(5),
-  table:has(tbody[data-draw="tx-tabel"]) :is(th, td):nth-child(3),
-  table:has(tbody[data-draw="reizen-tabel"]) :is(th, td):nth-child(4),
-  table:has(tbody[data-draw="reizen-tabel"]) :is(th, td):nth-child(5),
-  table:has(tbody[data-draw="reizen-tabel"]) :is(th, td):nth-child(6),
   table:has(tbody[data-draw="review"]) :is(th, td):nth-child(2),
-  table:has(tbody[data-draw="verwacht-tabel"]) :is(th, td):nth-child(3),
-  table:has(tbody[data-draw="vm-pos-tabel"]) :is(th, td):nth-child(2),
-  table:has(tbody[data-draw="vm-pos-tabel"]) :is(th, td):nth-child(6),
   table:has(tbody[data-draw="t212-tabel"]) :is(th, td):nth-child(5) { display: none; }
 }
 .fd-verd { display: flex; flex-direction: column; gap: var(--cds-gap-md); }
@@ -246,6 +236,85 @@
 .fd-label { flex-wrap: wrap; max-width: 100%; }
 .fd-chip { max-width: 100%; white-space: normal; }
 .fd-table .fd-chip { white-space: nowrap; }
+/* ---------- Phone layout ---------- */
+.fd-totals .fd-sub, #verwacht-kop + p.fd-sub { display: block; }
+@media (max-width: 560px) {
+  .fd-card .fd-per { display: none; }
+  .fd-card .fd-label { white-space: nowrap; }
+  .fd-card { padding: var(--cds-pad-md); }
+  /* Tables become compact rows: name and amount on top, details below */
+  :is(table:has(> tbody[data-draw="vaste-tabel"]), table:has(> tbody[data-draw="verwacht-tabel"]), table:has(> tbody[data-draw="reizen-tabel"]), table:has(> tbody[data-draw="tx-tabel"]), table:has(> tbody[data-draw="vm-pos-tabel"])) {
+    display: block;
+    & thead { display: none; }
+    & tbody { display: block; }
+    & tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; row-gap: 3px; padding: 10px 4px; border-bottom: 1px solid var(--color-border-line); align-items: center; }
+    & td { display: block; border: 0; padding: 0; text-align: left; white-space: normal; min-width: 0; }
+    & td[colspan] { grid-column: 1 / -1; }
+    & td:empty { display: none; }
+    & .fd-party { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; }
+    & .fd-chip { margin-left: 0; margin-right: 6px; white-space: normal; }
+  }
+  .fd-table tr.fd-groep { display: block; padding: 0; background: var(--color-panel); }
+  .fd-table tr.fd-groep td { padding: 10px 8px; }
+  /* Vaste lasten: name | per maand, status + extra | verwacht */
+  table:has(> tbody[data-draw="vaste-tabel"]) tr:not(.fd-groep) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "n n p" "s x v";
+    & > td:nth-child(1) { grid-area: n; }
+    & > td:nth-child(2) { grid-area: s; }
+    & > td:nth-child(6) { grid-area: p; text-align: right; font-weight: var(--cds-font-weight-medium); }
+    & > td:nth-child(6)::after { content: " p/m"; font-weight: 400; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+    & > td:nth-child(7) { grid-area: v; text-align: right; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+    & > td:nth-child(8) { grid-area: x; }
+    & > td:is(:nth-child(3), :nth-child(4), :nth-child(5), :nth-child(9)) { display: none; }
+  }
+  /* Verwachte afschrijvingen: wat | bedrag, datum | opmerking */
+  table:has(> tbody[data-draw="verwacht-tabel"]) tr {
+    grid-template-areas: "w b" "d d" "o o";
+    & > td:nth-child(1) { grid-area: d; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+    & > td:nth-child(2) { grid-area: w; }
+    & > td:nth-child(3) { display: none; }
+    & > td:nth-child(4) { grid-area: b; text-align: right; font-weight: var(--cds-font-weight-medium); }
+    & > td:nth-child(5) { grid-area: o; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  }
+  /* Reizen: reis | totaal, periode | per dag */
+  table:has(> tbody[data-draw="reizen-tabel"]) tr {
+    grid-template-areas: "n t" "p d";
+    & > td:nth-child(1) { grid-area: n; font-weight: var(--cds-font-weight-medium); }
+    & > td:nth-child(2) { grid-area: p; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+    & > td:nth-child(7) { grid-area: t; text-align: right; font-weight: var(--cds-font-weight-medium); }
+    & > td:nth-child(8) { grid-area: d; text-align: right; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+    & > td:nth-child(8)::after { content: " per dag"; }
+    & > td:is(:nth-child(3), :nth-child(4), :nth-child(5), :nth-child(6)) { display: none; }
+  }
+  /* Transacties: tegenpartij | bedrag, categorie | datum */
+  table:has(> tbody[data-draw="tx-tabel"]) tr {
+    grid-template-areas: "n b" "c d";
+    & > td:nth-child(1) { grid-area: d; text-align: right; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+    & > td:nth-child(2) { grid-area: n; }
+    & > td:nth-child(3) { display: none; }
+    & > td:nth-child(4) { grid-area: c; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+    & > td:nth-child(5) { grid-area: b; text-align: right; font-weight: var(--cds-font-weight-medium); }
+  }
+  /* Posities: positie | waarde, sinds stand | winst */
+  table:has(> tbody[data-draw="vm-pos-tabel"]) tr {
+    grid-template-areas: "n w" "s g";
+    & > td:nth-child(1) { grid-area: n; }
+    & > td:nth-child(2), & > td:nth-child(6) { display: none; }
+    & > td:nth-child(3) { grid-area: w; text-align: right; font-weight: var(--cds-font-weight-medium); }
+    & > td:nth-child(4) { grid-area: s; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+    & > td:nth-child(4)::before { content: "sinds stand "; }
+    & > td:nth-child(5) { grid-area: g; text-align: right; font-size: var(--cds-font-size-caption); }
+  }
+  /* Small number tables: tighter, headers may wrap */
+  :is(table:has(> tbody[data-draw="t212-tabel"]), table:has(> tbody[data-draw="vm-stroom-tabel"]), table:has(> tbody[data-draw="vm-hist-tabel"]), table:has(> tbody[data-draw="cat-tabel"])) {
+    font-size: 0.8125rem;
+    & :is(th, td) { padding: 8px 4px; }
+    & th { white-space: normal; vertical-align: bottom; }
+  }
+  /* Categorie-afwijking: drop the average column */
+  table:has(> tbody[data-draw="cat-tabel"]) :is(th, td):nth-child(3) { display: none; }
+}
 </style>
 </head>
 <body>
@@ -376,23 +445,23 @@
 
   <section class="fd-cards" id="kerncijfers" aria-label="Kerncijfers" data-show="data">
     <div class="fd-card fd-card-link" id="kaart-inkomsten" role="button" tabindex="0" data-soort="inkomsten" data-periode="kpi" aria-label="Toon de inkomsten van deze periode">
-      <span class="fd-label"><svg class="fd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>Inkomsten, <span data-draw="k-maand">—</span></span>
+      <span class="fd-label"><svg class="fd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>Inkomsten<span class="fd-per">, <span data-draw="k-maand">—</span></span></span>
       <span class="fd-big" data-draw="k-inkomsten" data-source="kpi" data-field="inkomsten" data-row="0">—</span>
       <span class="fd-delta"><b data-draw="d-inkomsten" data-source="kpi" data-field="d_inkomsten" data-row="0">—</b> t.o.v. <span data-draw="vorige">—</span></span>
       <span class="fd-delta">Waarvan salaris: <b data-draw="k-werk" data-source="kpi" data-field="werk" data-row="0">—</b></span>
     </div>
     <div class="fd-card fd-card-link" id="kaart-uitgaven" role="button" tabindex="0" data-soort="uitgaven" data-periode="kpi" aria-label="Toon de uitgaven van deze periode">
-      <span class="fd-label"><svg class="fd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M4 21h16"/></svg>Uitgaven, <span data-draw="k-maand">—</span></span>
+      <span class="fd-label"><svg class="fd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M4 21h16"/></svg>Uitgaven<span class="fd-per">, <span data-draw="k-maand">—</span></span></span>
       <span class="fd-big" data-draw="k-uitgaven" data-source="kpi" data-field="uitgaven" data-row="0">—</span>
       <span class="fd-delta"><b data-draw="d-uitgaven" data-source="kpi" data-field="d_uitgaven" data-row="0">—</b> t.o.v. <span data-draw="vorige">—</span></span>
     </div>
     <div class="fd-card fd-card-link" id="kaart-saldo" role="button" tabindex="0" data-soort="beide" data-periode="kpi" aria-label="Toon inkomsten en uitgaven van deze periode">
-      <span class="fd-label"><svg class="fd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM8 21h8"/></svg>Saldo, <span data-draw="k-maand">—</span></span>
+      <span class="fd-label"><svg class="fd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM8 21h8"/></svg>Saldo<span class="fd-per">, <span data-draw="k-maand">—</span></span></span>
       <span class="fd-big" data-draw="k-saldo" data-source="kpi" data-field="saldo" data-row="0">—</span>
       <span class="fd-delta"><b data-draw="d-saldo" data-source="kpi" data-field="d_saldo" data-row="0">—</b> t.o.v. <span data-draw="vorige">—</span></span>
     </div>
     <div class="fd-card fd-card-link" id="kaart-spaarquote" role="button" tabindex="0" data-soort="beide" data-periode="kpi" aria-label="Toon inkomsten en uitgaven van deze periode">
-      <span class="fd-label"><svg class="fd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5L5 19M9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM20 17.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/></svg>Spaarquote, <span data-draw="k-maand">—</span></span>
+      <span class="fd-label"><svg class="fd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5L5 19M9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zM20 17.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/></svg>Spaarquote<span class="fd-per">, <span data-draw="k-maand">—</span></span></span>
       <span class="fd-big" data-draw="k-quote" data-source="kpi" data-field="spaarquote" data-row="0">—</span>
       <span class="fd-delta"><b data-draw="d-quote" data-source="kpi" data-field="d_quote" data-row="0">—</b> t.o.v. <span data-draw="vorige">—</span></span>
     </div>
@@ -2126,7 +2195,7 @@
       for (const o of parseJ(l && l.orders) || []) if (o.status === "open" && (r.waar === "Los") === !o.pie && r.positie.toLowerCase().startsWith(String(o.naam).toLowerCase().split(" ")[0])) { const c = document.createElement("span"); c.className = "fd-chip fd-chip-warn"; c.textContent = `${o.soort} ${eur(o.bedrag)} open`; nc.append(" ", c); }
       const w = tr.insertCell(); w.className = "l"; w.textContent = r.waar;
       tr.insertCell().textContent = eur2(r.nu);
-      const v = tr.insertCell(); v.textContent = r.verschil_pct == null ? "—" : signed(r.verschil_pct, NL.format(".1f")) + "%"; if (r.verschil_pct) v.style.color = r.verschil_pct > 0 ? "var(--color-ok)" : "var(--color-bad)";
+      const v = tr.insertCell(); v.textContent = r.verschil_pct == null ? "" : signed(r.verschil_pct, NL.format(".1f")) + "%"; if (r.verschil_pct) v.style.color = r.verschil_pct > 0 ? "var(--color-ok)" : "var(--color-bad)";
       const g = tr.insertCell(); g.textContent = signed(r.winst, eur2); g.style.color = r.winst >= 0 ? "var(--color-ok)" : "var(--color-bad)";
       const c = r.nu - r.winst; tr.insertCell().textContent = c > 0 ? (r.winst >= 0 ? "+" : "−") + NL.format(".1f")(Math.abs((r.winst / c) * 100)) + "%" : "—";
     }
