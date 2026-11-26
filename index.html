@@ -324,6 +324,28 @@
   table:has(> tbody[data-draw="tx-tabel"]) tr { grid-template-areas: "n b" "d d"; }
   table:has(> tbody[data-draw="tx-tabel"]) tr > td:nth-child(1) { text-align: left; }
 }
+.fd-sheet { border: 1px solid var(--color-border-line); border-radius: 16px; padding: 0; width: min(520px, calc(100vw - 24px)); max-height: min(85vh, 640px); background: var(--color-bg); color: var(--color-fg); box-shadow: 0 12px 40px rgba(0,0,0,.25); }
+.fd-sheet[open] { display: flex; flex-direction: column; }
+.fd-sheet::backdrop { background: rgba(0,0,0,.35); }
+.fd-sheet-body { padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-md); overflow-y: auto; flex: 1 1 auto; min-height: 0; }
+.fd-sheet-kop { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.fd-sheet-kop .fd-party { min-width: 0; overflow-wrap: anywhere; }
+.fd-sheet-bedrag { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 1.5rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.fd-sheet-bedrag.plus { color: var(--color-ok); }
+.fd-sheet-info { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 16px; margin: 0; font-size: var(--cds-font-size-body); }
+.fd-sheet-info dt { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); padding-top: 2px; }
+.fd-sheet-info dd { margin: 0; overflow-wrap: anywhere; }
+.fd-sheet-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; border-top: 1px solid var(--color-border-line); padding-top: var(--cds-gap-md); }
+.fd-sheet-form label { grid-column: 1 / -1; }
+.fd-sheet-acties { flex: none; display: flex; justify-content: flex-end; padding: var(--cds-pad-sm) var(--cds-pad-lg) var(--cds-pad-lg); border-top: 1px solid var(--color-border-line); }
+@media (max-width: 560px) {
+  .fd-sheet { width: 100vw; max-width: 100vw; margin: auto 0 0; border-radius: 18px 18px 0 0; border-bottom: 0; padding-bottom: env(safe-area-inset-bottom); }
+  .fd-sheet { max-height: 92vh; }
+  .fd-sheet-info { grid-template-columns: 6.5rem minmax(0, 1fr); gap: 6px 10px; font-size: var(--cds-font-size-caption); }
+  .fd-sheet-info dd { font-size: var(--cds-font-size-body); }
+  .fd-sheet-body { gap: var(--cds-gap-sm); }
+  .fd-sheet-acties .fd-btn { width: 100%; min-height: 44px; }
+}
 </style>
 </head>
 <body>
@@ -380,6 +402,11 @@
     <div class="fd-uitg" data-draw="uitg-lijst" data-source="transacties"></div>
     <p class="fd-sub"><button class="fd-btn fd-btn-small" type="button" id="uitg-meer">Toon meer</button></p>
   </section>
+
+  <dialog class="fd-sheet" id="tx-detail" aria-label="Details van de betaling">
+    <div class="fd-sheet-body" data-draw="tx-detail" data-source="transacties"></div>
+    <div class="fd-sheet-acties"><button class="fd-btn" type="button" id="tx-detail-sluit">Sluiten</button></div>
+  </dialog>
 
   <section class="fd-section" id="vermogen" role="tabpanel" aria-labelledby="tabknop-vermogen" hidden>
     <h2><svg class="fd-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>Beleggingen en spaargeld</h2>
@@ -655,7 +682,7 @@
     </form>
     <p class="app-h">Versie</p>
     <div class="app-btns">
-      <span class="app-status">Versie 26-11-2026 23:08</span>
+      <span class="app-status">Versie 26-11-2026 23:10</span>
       <button type="button" class="fd-btn fd-btn-small" id="app-bijwerken">App bijwerken</button>
     </div>
     <p class="app-status" id="app-versie-status" aria-live="polite"></p>
@@ -813,7 +840,7 @@
           key: t.a && t.v ? t.a + "|" + t.v : [t.d, t.b, naam, t.o].join("|"),
           datum: t.d, maand: (t.d || "").slice(0, 7), bedrag: t.b,
           tegenpartij: ((a) => (a ? a.label + " · " : ""))(aliassen.find((a) => (a.partij || []).every((w) => sleutel.includes(w)) && !(a.niet || []).some((w) => sleutel.includes(w)))) + ((txHit && txHit.naam) || naam || (t.o || "").slice(0, 40) || "Onbekend"),
-          omschrijving: t.o || "", sleutel: txHit && txHit.naam ? norm(txHit.naam) : sleutel, categorie: cat, bron, soort, rekening: t.a || ""
+          omschrijving: t.o || "", sleutel: txHit && txHit.naam ? norm(txHit.naam) : sleutel, categorie: cat, bron, soort, rekening: t.a || "", tegenrekening: t.t || ""
         };
       });
       return rows.sort((a, b) => (a.datum < b.datum ? 1 : a.datum > b.datum ? -1 : 0));
@@ -1782,7 +1809,7 @@
       const tr = tb.insertRow();
       tr.dataset.key = encodeURIComponent(t.key);
       tr.className = "fd-click";
-      tr.addEventListener("click", () => pickParty(t.sleutel));
+      tr.addEventListener("click", () => openDetail(t.key));
       tr.insertCell().textContent = dShort(t.datum) + " " + t.datum.slice(0, 4);
       const c1 = tr.insertCell(); c1.className = "l"; c1.append(partyLabel(t.tegenpartij));
       const c2 = tr.insertCell(); c2.className = "l fd-wrap"; c2.textContent = t.omschrijving.length > 70 ? t.omschrijving.slice(0, 70) + "…" : t.omschrijving;
@@ -2395,6 +2422,47 @@
     unmount(el, st) { if (st) { clearTimeout(st.timer); if (st.off) st.off(); } }
   });
 
+  // ================= Betaling: detailvenster =================
+  function openDetail(key) {
+    FIN.detail = key;
+    dash.draw("tx-detail");
+    document.querySelectorAll("#tx-detail").forEach((d) => { if (!d.open) { try { d.showModal(); } catch (e) { d.setAttribute("open", ""); } } });
+  }
+  const sluitDetail = () => document.querySelectorAll("#tx-detail").forEach((d) => { if (d.open) d.close(); });
+  document.querySelectorAll("#tx-detail-sluit").forEach((b) => b.addEventListener("click", sluitDetail));
+  document.querySelectorAll("#tx-detail").forEach((d) => d.addEventListener("click", (ev) => { if (ev.target === d) sluitDetail(); }));
+  dash.draw("tx-detail", (el) => {
+    el.replaceChildren();
+    const d = dash.data("transacties");
+    const t = d.status === "ok" && FIN.detail ? d.data.find((x) => x.key === FIN.detail) : null;
+    if (!t) return;
+    const kop = document.createElement("div"); kop.className = "fd-sheet-kop";
+    const bed = document.createElement("div"); bed.className = "fd-sheet-bedrag" + (t.bedrag > 0 ? " plus" : ""); bed.textContent = signed(t.bedrag, eur2);
+    kop.append(partyLabel(t.tegenpartij || "Onbekend"), bed);
+    const dl = document.createElement("dl"); dl.className = "fd-sheet-info";
+    const rij = (k, v) => { if (v == null || v === "") return; const dt = document.createElement("dt"); dt.textContent = k; const dd = document.createElement("dd"); if (typeof v === "string") dd.textContent = v; else dd.append(v); dl.append(dt, dd); };
+    rij("Datum", dagLang(t.datum));
+    const cat = document.createElement("span"); cat.append(catLabel(t.categorie));
+    if (t.bron === "jij") { const n = document.createElement("span"); n.className = "fd-sub"; n.style.display = "inline"; n.textContent = "  (door jou ingesteld)"; cat.append(n); }
+    rij("Categorie", cat);
+    rij("Omschrijving", t.omschrijving);
+    rij("Van rekening", t.rekening ? rekNaam(t.rekening) : "");
+    rij("Tegenrekening", t.tegenrekening);
+    const form = document.createElement("div"); form.className = "fd-sheet-form";
+    const lab = document.createElement("label"); lab.className = "fd-sub"; lab.textContent = "Categorie aanpassen voor alle betalingen aan " + (t.tegenpartij || "deze partij"); lab.htmlFor = "tx-detail-cat";
+    const sel = document.createElement("select"); sel.className = "dash-select"; sel.id = "tx-detail-cat";
+    document.querySelectorAll("#regel-cat option").forEach((op) => sel.append(new Option(op.value, op.value)));
+    sel.value = t.categorie;
+    const knop = document.createElement("button"); knop.type = "button"; knop.className = "fd-btn fd-btn-primary"; knop.textContent = "Opslaan";
+    knop.addEventListener("click", () => {
+      if (!t.sleutel) return;
+      saveSettings((cfg) => { cfg.regels[t.sleutel] = sel.value; }, `${t.tegenpartij} staat nu onder ${sel.value}.`);
+      sluitDetail();
+    });
+    form.append(lab, sel, knop);
+    el.append(kop, dl, form);
+  });
+
   // ================= Alle uitgaven (tab) =================
   FIN.uitgLimit = FIN.uitgLimit || 150;
   const dagLang = (k) => tf.utcFormat("%A %e %B %Y")(parseD(k)).replace(/\s+/g, " ");
@@ -2424,7 +2492,8 @@
       const om = document.createElement("span"); om.className = "om"; om.textContent = t.omschrijving || "";
       o.append(catLabel(t.categorie), om);
       r.append(partyLabel(t.tegenpartij || "Onbekend"), b, o);
-      if (t.sleutel) r.addEventListener("click", () => { toonTab("overzicht"); setTimeout(() => pickParty(t.sleutel), 50); });
+      r.addEventListener("click", () => openDetail(t.key));
+      r.addEventListener("keydown", (ev) => { if (ev.key === "Enter") openDetail(t.key); });
       el.append(r);
     }
   });
