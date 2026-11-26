@@ -316,6 +316,14 @@
   /* Categorie-afwijking: drop the average column */
   table:has(> tbody[data-draw="cat-tabel"]) :is(th, td):nth-child(3) { display: none; }
 }
+@media (max-width: 560px) {
+  /* Phone: one line per payment, name and amount only */
+  .fd-uitg-rij { padding: 11px 4px; }
+  .fd-uitg-rij .o { display: none; }
+  table:has(> tbody[data-draw="tx-tabel"]) tr > td:nth-child(4) { display: none; }
+  table:has(> tbody[data-draw="tx-tabel"]) tr { grid-template-areas: "n b" "d d"; }
+  table:has(> tbody[data-draw="tx-tabel"]) tr > td:nth-child(1) { text-align: left; }
+}
 </style>
 </head>
 <body>
@@ -647,7 +655,7 @@
     </form>
     <p class="app-h">Versie</p>
     <div class="app-btns">
-      <span class="app-status">Versie 26-11-2026 23:07</span>
+      <span class="app-status">Versie 26-11-2026 23:08</span>
       <button type="button" class="fd-btn fd-btn-small" id="app-bijwerken">App bijwerken</button>
     </div>
     <p class="app-status" id="app-versie-status" aria-live="polite"></p>
