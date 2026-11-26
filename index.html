@@ -241,6 +241,11 @@
 .fd-uitg-rij .o .fd-cat { white-space: nowrap; }
 .fd-uitg-rij .o .om { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 #uitg-zoek { width: 100%; max-width: 520px; }
+/* Never let the page slide sideways on a phone */
+.fd { max-width: 100%; overflow-x: clip; }
+.fd-label { flex-wrap: wrap; max-width: 100%; }
+.fd-chip { max-width: 100%; white-space: normal; }
+.fd-table .fd-chip { white-space: nowrap; }
 </style>
 </head>
 <body>
